@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPi LED Controller</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 { margin-bottom: 20px; }
+        .card {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .control-group { margin-bottom: 25px; }
+        label { display: block; margin-bottom: 10px; font-weight: bold; }
+        
+        input[type="color"] {
+            width: 100%;
+            height: 50px;
+            border: none;
+            cursor: pointer;
+            background: none;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: #444; }
+        button.active { background-color: #007aff; }
+        
+        /* Status indicator */
+        #status {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>LED Controller</h1>
+
+    <div class="control-group">
+        <label>Solid Color</label>
+        <input type="color" id="colorPicker" value="#ff0000">
+    </div>
+
+    <div class="control-group">
+        <label>Brightness</label>
+        <input type="range" id="brightness" min="0" max="255" value="255">
+    </div>
+
+    <div class="control-group">
+        <label>Patterns</label>
+        <div class="btn-group">
+            <button onclick="setPattern('rainbow')">Rainbow</button>
+            <button onclick="setPattern('color_wipe')">Color Wipe</button>
+            <button onclick="setPattern('theater_chase')">Theater Chase</button>
+            <button onclick="setPattern('pulse')">Pulse</button>
+            <button onclick="setPattern('off')">Off</button>
+        </div>
+    </div>
+
+    <div id="status">Ready</div>
+</div>
+
+<script>
+    const statusEl = document.getElementById('status');
+    const colorPicker = document.getElementById('colorPicker');
+    const brightnessSlider = document.getElementById('brightness');
+
+    function showStatus(msg) {
+        statusEl.textContent = msg;
+        setTimeout(() => statusEl.textContent = "Ready", 2000);
+    }
+
+    async function apiCall(endpoint, data) {
+        try {
+            await fetch('/api/' + endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            showStatus("Updated!");
+        } catch (e) {
+            showStatus("Error: " + e);
+        }
+    }
+
+    colorPicker.addEventListener('change', (e) => {
+        // Convert hex to rgb
+        const hex = e.target.value;
+        const r = parseInt(hex.substr(1,2), 16);
+        const g = parseInt(hex.substr(3,2), 16);
+        const b = parseInt(hex.substr(5,2), 16);
+        apiCall('color', { r, g, b });
+    });
+
+    brightnessSlider.addEventListener('change', (e) => {
+        apiCall('brightness', { brightness: parseInt(e.target.value) });
+    });
+
+    function setPattern(name) {
+        apiCall('pattern', { pattern: name });
+    }
+</script>
+
+</body>
+</html>

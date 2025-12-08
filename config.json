@@ -1,0 +1,9 @@
+{
+    "LED_COUNT": 50,
+    "LED_PIN": 18,
+    "LED_BRIGHTNESS": 255,
+    "LED_DMA": 10,
+    "LED_FREQ_HZ": 800000,
+    "LED_INVERT": false,
+    "LED_CHANNEL": 0
+}
