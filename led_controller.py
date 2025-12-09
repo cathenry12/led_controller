@@ -18,6 +18,9 @@ except ImportError:
     BLUEDOT_AVAILABLE = False
     logging.warning("BlueDot library not found. Bluetooth control disabled.")
 
+import os
+# ... (imports preserved)
+
 # Configuration Defaults
 DEFAULT_CONFIG = {
     "LED_COUNT": 50,
@@ -29,7 +32,9 @@ DEFAULT_CONFIG = {
     "LED_CHANNEL": 0
 }
 
-CONFIG_FILE = "/home/pi/led_controller/config.json"
+# Determine path relative to this script
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_FILE = os.path.join(APP_DIR, "config.json")
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # --- Animation Logic ---
