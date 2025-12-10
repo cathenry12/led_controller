@@ -62,9 +62,20 @@ Access the controller at:
 ## Bluetooth Control (Blue Dot)
 
 1.  **Download App**: Install **Blue Dot** by *Martin O'Hanlon* from the App Store or Play Store.
-2.  **Pairing**:
-    -   Go to your phone's Bluetooth settings.
-    -   Pair with your Raspberry Pi (usually named `raspberrypi`).
+2.  **Pairing (Command Line / Headerless)**:
+    Since you are on Pi OS Lite, you must pair via the terminal:
+    ```bash
+    sudo bluetoothctl
+    # Inside the bluetooth prompt:
+    > power on
+    > discoverable on
+    > pairable on
+    > agent on
+    > default-agent
+    ```
+    *Now scan from your phone and select "raspberrypi".*
+    *Confirm the passcode on the Pi (type `yes`) if asked.*
+
 3.  **Connect**:
     -   Open the Blue Dot app.
     -   Select your Pi from the list.
