@@ -43,7 +43,7 @@ Edit `/home/pi/led_controller/config.json` to change settings:
 
 ```json
 {
-    "LED_COUNT": 50,      // Number of LEDs
+    "LED_COUNT": 150,      // Number of LEDs
     "LED_PIN": 18,        // GPIO Pin (Recommended: 18)
     "LED_BRIGHTNESS": 255 // 0-255
 }
